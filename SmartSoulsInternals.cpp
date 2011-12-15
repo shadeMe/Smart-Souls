@@ -3,67 +3,46 @@
 IDebugLog		gLog("Smart Souls.log");
 PluginHandle	g_pluginHandle = kPluginHandle_Invalid;
 
-UInt32			g_ActorSoulLevelIncrement = 0;
+_DefinePatchHdlr(FindBestSoulGemVisitorVisitSizeCheck, 0x004B9ED0);
+_DefineHookHdlr(DisplaySoulNameOnCapture, 0x007FA737);
 
-_DefinePatchHdlr(FindBestSoulGemVisitorVisitSizeCheck, 0x004B9C60);
-_DefineHookHdlr(ActorTrapSoul, 0x007F8D60);
-_DefineHookHdlr(FindBestSoulGemVisitorVisitActorSoulLevel, 0x004B9BCF);
-
-void SmartenSkyimSouls(void)
+void SmartenSkyrimSouls(void)
 {
 	_MemHdlr(FindBestSoulGemVisitorVisitSizeCheck).WriteUInt8(0x75);
-//	_MemHdlr(ActorTrapSoul).WriteJump();									### bollocks! turns out the vanilla code already does this >:(
-//	_MemHdlr(FindBestSoulGemVisitorVisitActorSoulLevel).WriteJump();			I mean, really; fucking hell...
+	_MemHdlr(DisplaySoulNameOnCapture).WriteJump();
 }
 
-#define _hhName	ActorTrapSoul
-_hhBegin()
+UInt32 GetActorSoulType(Actor* Actor)
 {
-	_hhSetVar(Retn, 0x007F8D65);
-	__asm
-	{
-		pop		edx
+	bool IsSentient = thisCall<bool>(0x007DD710, Actor);
+	int Level = thisCall<UInt16>(0x007A42C0, Actor);
 
-		pushad
-		push	edx
-		push	ecx
-		call	ActorTrapSoulPerformContainerExtraDataVisit
-		popad
-
-		jmp		[_hhGetVar(Retn)]
-	}
+	return cdeclCall<int>(0x00635A20, Level, IsSentient);
 }
 
-#define _hhName	FindBestSoulGemVisitorVisitActorSoulLevel
+const char* DoDisplaySoulNameOnCaptureHook(const char* CaptureMessage, Actor* TrappedActor)
+{
+	static char s_CaptureMessageBuffer[0x200] = {0};
+
+	UInt32 SoulType = GetActorSoulType(TrappedActor);
+	const char* SoulName = cdeclCall<const char*>(0x004F26B0, SoulType);
+
+	sprintf_s(s_CaptureMessageBuffer, sizeof(s_CaptureMessageBuffer), "%s %s", SoulName, CaptureMessage);
+	return s_CaptureMessageBuffer;
+}
+
+#define _hhName	DisplaySoulNameOnCapture
 _hhBegin()
 {
-	_hhSetVar(Retn, 0x004B9BD4);
-	_hhSetVar(Call, 0x007F8C60);
+	_hhSetVar(Retn, 0x007FA73C);
+	_hhSetVar(Call, 0x0040E990);
 	__asm
 	{
+		mov		eax, [ebp + 0x8]
+		push	eax
 		call	[_hhGetVar(Call)]
-		add		eax, g_ActorSoulLevelIncrement
+		push	eax
+		call	DoDisplaySoulNameOnCaptureHook
 		jmp		[_hhGetVar(Retn)]
 	}
-}
-
-UInt32 GetActorSoulLevel(Actor* Actor)
-{
-	return thisCall<UInt32>(0x007F8C60, Actor);
-}
-
-void __stdcall ActorTrapSoulPerformContainerExtraDataVisit(ContainerExtraData* ExtraData, InventoryChanges::FindBestSoulGemVisitor* Visitor)
-{
-	UInt32 TargetActorSoulLevel = GetActorSoulLevel((Actor*)Visitor->targetContainer);
-
-	for (int i = 0; TargetActorSoulLevel + i < 6; i++)
-	{
-		g_ActorSoulLevelIncrement = i;
-		thisCall<void>(0x004B2730, ExtraData, Visitor);		// ContainerExtraData::Visit
-
-		if (Visitor->foundSoulGem != NULL)
-			break;
-	}
-
-	g_ActorSoulLevelIncrement = 0;
 }

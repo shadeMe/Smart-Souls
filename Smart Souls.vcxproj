@@ -129,11 +129,32 @@
     <None Include="exports.def" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\SKSE\skse\GameAPI.cpp" />
+    <ClCompile Include="..\SKSE\skse\GameFormComponents.cpp" />
+    <ClCompile Include="..\SKSE\skse\GameForms.cpp" />
+    <ClCompile Include="..\SKSE\skse\GameObjects.cpp" />
+    <ClCompile Include="..\SKSE\skse\GamePathing.cpp" />
+    <ClCompile Include="..\SKSE\skse\GameReferences.cpp" />
+    <ClCompile Include="..\SKSE\skse\GameRTTI.cpp" />
+    <ClCompile Include="..\SKSE\skse\GameSettings.cpp" />
+    <ClCompile Include="..\SKSE\skse\GameTypes.cpp" />
+    <ClCompile Include="..\SKSE\skse\Utilities.cpp" />
     <ClCompile Include="..\[Libraries]\MemoryHandler\MemoryHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SmartSoulsInternals.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\SKSE\skse\GameAPI.h" />
+    <ClInclude Include="..\SKSE\skse\GameFormComponents.h" />
+    <ClInclude Include="..\SKSE\skse\GameForms.h" />
+    <ClInclude Include="..\SKSE\skse\GameObjects.h" />
+    <ClInclude Include="..\SKSE\skse\GamePathing.h" />
+    <ClInclude Include="..\SKSE\skse\GameReferences.h" />
+    <ClInclude Include="..\SKSE\skse\GameRTTI.h" />
+    <ClInclude Include="..\SKSE\skse\GameSettings.h" />
+    <ClInclude Include="..\SKSE\skse\GameTypes.h" />
+    <ClInclude Include="..\SKSE\skse\PluginAPI.h" />
+    <ClInclude Include="..\SKSE\skse\Utilities.h" />
     <ClInclude Include="..\[Libraries]\MemoryHandler\MemoryHandler.h" />
     <ClInclude Include="..\[Libraries]\SME_Prefix.h" />
     <ClInclude Include="resource.h" />

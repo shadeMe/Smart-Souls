@@ -9,14 +9,14 @@ extern "C"
 		// populate info structure
 		info->infoVersion =	PluginInfo::kInfoVersion;
 		info->name =		"Smart Souls";
-		info->version =		1;
+		info->version =		2;
 
 		// store plugin handle so we can identify ourselves later
 		g_pluginHandle = skse->GetPluginHandle();
 
 		if(skse->isEditor)
 			return false;
-		else if(skse->runtimeVersion != RUNTIME_VERSION_1_1_21_0)
+		else if(skse->runtimeVersion != RUNTIME_VERSION_1_3_7_0)
 		{
 			_MESSAGE("Unsupported runtime version %08X", skse->runtimeVersion);
 			return false;
@@ -28,7 +28,8 @@ extern "C"
 
 	bool SKSEPlugin_Load(const SKSEInterface * skse)
 	{
-		SmartenSkyimSouls();
+		SmartenSkyrimSouls();
+
 		_MESSAGE("Souls Smartened Successfully!");
 		return true;
 	}

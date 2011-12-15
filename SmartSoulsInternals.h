@@ -43,7 +43,7 @@ public:
 		// members
 		//     /*00*/ void**			vtbl;
 		/*04*/ TESContainer*			targetContainer;	// might be a different class, indigenous to Skyrim
-		/*08*/ TESSoulGem*				foundSoulGem;		// set to NULL in ctor and when non are found
+		/*08*/ TESSoulGem*				foundSoulGem;		// set to NULL in ctor and when none are found
 
 		// methods
 		virtual void*					Dtor(bool ReleaseMemory);
@@ -53,9 +53,6 @@ public:
 };
 
 _DeclareMemHdlr(FindBestSoulGemVisitorVisitSizeCheck, "keeps soul and soul gem capacity levels from mismatching");
-_DeclareMemHdlr(ActorTrapSoul, "adds support for multiple Visit() passes");
-_DeclareMemHdlr(FindBestSoulGemVisitorVisitActorSoulLevel, "");
+_DeclareMemHdlr(DisplaySoulNameOnCapture, "displays the size of the captured soul in the capture message");
 
-void __stdcall ActorTrapSoulPerformContainerExtraDataVisit(ContainerExtraData* ExtraData, InventoryChanges::FindBestSoulGemVisitor* Visitor);
-
-void SmartenSkyimSouls(void);
+void SmartenSkyrimSouls(void);

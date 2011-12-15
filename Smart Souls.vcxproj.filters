@@ -6,6 +6,36 @@
       <Filter>Utilities</Filter>
     </ClCompile>
     <ClCompile Include="SmartSoulsInternals.cpp" />
+    <ClCompile Include="..\SKSE\skse\GameAPI.cpp">
+      <Filter>SKSE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SKSE\skse\GameFormComponents.cpp">
+      <Filter>SKSE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SKSE\skse\GameForms.cpp">
+      <Filter>SKSE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SKSE\skse\GameObjects.cpp">
+      <Filter>SKSE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SKSE\skse\GamePathing.cpp">
+      <Filter>SKSE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SKSE\skse\GameReferences.cpp">
+      <Filter>SKSE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SKSE\skse\GameRTTI.cpp">
+      <Filter>SKSE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SKSE\skse\GameSettings.cpp">
+      <Filter>SKSE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SKSE\skse\GameTypes.cpp">
+      <Filter>SKSE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SKSE\skse\Utilities.cpp">
+      <Filter>SKSE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="SKSE">
@@ -39,5 +69,38 @@
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="SmartSoulsInternals.h" />
+    <ClInclude Include="..\SKSE\skse\GameAPI.h">
+      <Filter>SKSE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SKSE\skse\GameFormComponents.h">
+      <Filter>SKSE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SKSE\skse\GameForms.h">
+      <Filter>SKSE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SKSE\skse\GameObjects.h">
+      <Filter>SKSE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SKSE\skse\GamePathing.h">
+      <Filter>SKSE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SKSE\skse\GameReferences.h">
+      <Filter>SKSE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SKSE\skse\GameRTTI.h">
+      <Filter>SKSE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SKSE\skse\GameSettings.h">
+      <Filter>SKSE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SKSE\skse\GameTypes.h">
+      <Filter>SKSE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SKSE\skse\PluginAPI.h">
+      <Filter>SKSE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SKSE\skse\Utilities.h">
+      <Filter>SKSE</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
