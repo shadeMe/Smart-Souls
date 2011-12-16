@@ -5,11 +5,13 @@ PluginHandle	g_pluginHandle = kPluginHandle_Invalid;
 
 _DefinePatchHdlr(FindBestSoulGemVisitorVisitSizeCheck, 0x004B9ED0);
 _DefineHookHdlr(DisplaySoulNameOnCapture, 0x007FA737);
+_DefineHookHdlr(SentientSoulCheck, 0x004B9E60);
 
 void SmartenSkyrimSouls(void)
 {
 	_MemHdlr(FindBestSoulGemVisitorVisitSizeCheck).WriteUInt8(0x75);
 	_MemHdlr(DisplaySoulNameOnCapture).WriteJump();
+	_MemHdlr(SentientSoulCheck).WriteJump();
 }
 
 UInt32 GetActorSoulType(Actor* Actor)
@@ -43,6 +45,37 @@ _hhBegin()
 		call	[_hhGetVar(Call)]
 		push	eax
 		call	DoDisplaySoulNameOnCaptureHook
+		jmp		[_hhGetVar(Retn)]
+	}
+}
+
+#define _hhName	SentientSoulCheck
+_hhBegin()
+{
+	_hhSetVar(Retn, 0x004B9E87);
+	_hhSetVar(Skip, 0x004B9F27);
+	_hhSetVar(Sentient, 0x004B9E68);
+	_hhSetVar(Call, 0x00934480);		// TESForm::GetFlag
+	__asm
+	{
+		movzx   eax, byte ptr [ebp - 0x9]
+		test    eax, eax
+		jnz		SENTIENT				// if non-sentient, make sure we aren't using a black soul gem
+
+		mov		ecx, [ebp + 0x8]
+		mov		ecx, [ecx]
+		push	0x20000					// black soul gems are marked with the (TES4)dangerous flag
+		call	[_hhGetVar(Call)]
+		movzx	ecx, al
+		test	ecx, ecx
+		jz		NEXT
+
+		jmp		SKIP
+	SENTIENT:
+		jmp		[_hhGetVar(Sentient)]
+	SKIP:
+		jmp		[_hhGetVar(Skip)]
+	NEXT:
 		jmp		[_hhGetVar(Retn)]
 	}
 }

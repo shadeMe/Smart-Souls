@@ -54,5 +54,6 @@ public:
 
 _DeclareMemHdlr(FindBestSoulGemVisitorVisitSizeCheck, "keeps soul and soul gem capacity levels from mismatching");
 _DeclareMemHdlr(DisplaySoulNameOnCapture, "displays the size of the captured soul in the capture message");
+_DeclareMemHdlr(SentientSoulCheck, "fixes a bug that caused non-humanoid souls to get trapped inside black soulgems under certain circumstances");
 
 void SmartenSkyrimSouls(void);
