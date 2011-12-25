@@ -4,6 +4,8 @@
 #include "skse/skse_version.h"
 
 #include "[Libraries]\MemoryHandler\MemoryHandler.h"
+#include "[Libraries]\INI Manager\INIManager.h"
+
 using namespace SME;
 using namespace SME::MemoryHandler;
 
@@ -14,8 +16,16 @@ class ContainerExtraData;
 class ContainerExtraEntry;
 class TESContainer;
 class TESSoulGem;
-class Actor;
 class Character;
+
+extern SME::INI::INIManager*						g_INIManager;
+extern std::string									g_INIPath;
+
+class SmartSoulsINIManager : public INI::INIManager
+{
+public:
+	void							Initialize();
+};
 
 // 00
 class InventoryChanges
@@ -53,7 +63,8 @@ public:
 };
 
 _DeclareMemHdlr(FindBestSoulGemVisitorVisitSizeCheck, "keeps soul and soul gem capacity levels from mismatching");
-_DeclareMemHdlr(DisplaySoulNameOnCapture, "displays the size of the captured soul in the capture message");
+_DeclareMemHdlr(DisplaySoulNameOnCapture, "displays the size of the captured soul in the capture notification");
 _DeclareMemHdlr(SentientSoulCheck, "fixes a bug that caused non-humanoid souls to get trapped inside black soulgems under certain circumstances");
+_DeclareMemHdlr(DisplaySoulNameOnEscape, "displays the size of the escaped soul in the escape notification");
 
 void SmartenSkyrimSouls(void);

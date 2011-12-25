@@ -9,14 +9,15 @@ extern "C"
 		// populate info structure
 		info->infoVersion =	PluginInfo::kInfoVersion;
 		info->name =		"Smart Souls";
-		info->version =		2;
+		info->version =		3;
 
 		// store plugin handle so we can identify ourselves later
 		g_pluginHandle = skse->GetPluginHandle();
+		g_INIPath = "Data\\SKSE\\Plugins\\Smart Souls.ini";
 
 		if(skse->isEditor)
 			return false;
-		else if(skse->runtimeVersion != RUNTIME_VERSION_1_3_7_0)
+		else if(skse->runtimeVersion != RUNTIME_VERSION_1_3_10_0)
 		{
 			_MESSAGE("Unsupported runtime version %08X", skse->runtimeVersion);
 			return false;
@@ -28,6 +29,10 @@ extern "C"
 
 	bool SKSEPlugin_Load(const SKSEInterface * skse)
 	{
+		_MESSAGE("Initializing INI Manager");
+		g_INIManager->SetINIPath(g_INIPath);
+		g_INIManager->Initialize();
+
 		SmartenSkyrimSouls();
 
 		_MESSAGE("Souls Smartened Successfully!");

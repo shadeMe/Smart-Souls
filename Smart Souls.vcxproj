@@ -139,8 +139,9 @@
     <ClCompile Include="..\SKSE\skse\GameSettings.cpp" />
     <ClCompile Include="..\SKSE\skse\GameTypes.cpp" />
     <ClCompile Include="..\SKSE\skse\Utilities.cpp" />
+    <ClCompile Include="..\[Libraries]\INI Manager\INIManager.cpp" />
     <ClCompile Include="..\[Libraries]\MemoryHandler\MemoryHandler.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="SmartSoulsInternals.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="..\SKSE\skse\GameTypes.h" />
     <ClInclude Include="..\SKSE\skse\PluginAPI.h" />
     <ClInclude Include="..\SKSE\skse\Utilities.h" />
+    <ClInclude Include="..\[Libraries]\INI Manager\INIManager.h" />
     <ClInclude Include="..\[Libraries]\MemoryHandler\MemoryHandler.h" />
     <ClInclude Include="..\[Libraries]\SME_Prefix.h" />
     <ClInclude Include="resource.h" />

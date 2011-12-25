@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="..\[Libraries]\MemoryHandler\MemoryHandler.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
@@ -36,6 +35,10 @@
     <ClCompile Include="..\SKSE\skse\Utilities.cpp">
       <Filter>SKSE</Filter>
     </ClCompile>
+    <ClCompile Include="..\[Libraries]\INI Manager\INIManager.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="SKSE">
@@ -101,6 +104,9 @@
     </ClInclude>
     <ClInclude Include="..\SKSE\skse\Utilities.h">
       <Filter>SKSE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\[Libraries]\INI Manager\INIManager.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
