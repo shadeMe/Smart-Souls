@@ -16,7 +16,7 @@ class ContainerExtraData;
 class ContainerExtraEntry;
 class TESContainer;
 class TESSoulGem;
-class Character;
+class Actor;
 
 extern SME::INI::INIManager*						g_INIManager;
 extern std::string									g_INIPath;
@@ -24,14 +24,14 @@ extern std::string									g_INIPath;
 class SmartSoulsINIManager : public INI::INIManager
 {
 public:
-	void							Initialize();
+	void							Initialize(const char* INIPath, void* Paramenter);
 };
 
 // 00
 class InventoryChanges
 {
 public:
-	// 00
+	// 04
 	class IItemChangeVisitor
 	{
 	public:
