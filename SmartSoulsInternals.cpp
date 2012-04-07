@@ -1,4 +1,3 @@
-#pragma warning(disable : 4005)
 #include "SmartSoulsInternals.h"
 
 IDebugLog					gLog("Smart Souls.log");
@@ -8,8 +7,9 @@ std::string					g_INIPath;
 
 void SmartSoulsINIManager::Initialize(const char* INIPath, void* Paramenter)
 {
-	SetINIPath(INIPath);
+	this->INIFilePath = INIPath;
 	_MESSAGE("INI Path: %s", INIPath);
+
 	std::fstream INIStream(INIPath, std::fstream::in);
 	bool CreateINI = false;
 
@@ -22,19 +22,19 @@ void SmartSoulsINIManager::Initialize(const char* INIPath, void* Paramenter)
 	INIStream.close();
 	INIStream.clear();
 
-	RegisterSetting(new SME::INI::INISetting(this, "ShowCapturedSoulQuality", "Notifications", "1", "Displays the quality of captured soul"), (CreateINI == false));
-	RegisterSetting(new SME::INI::INISetting(this, "ShowEscapedSoulQuality", "Notifications", "1", "Displays the quality of escaped soul"), (CreateINI == false));
+	RegisterSetting("ShowCapturedSoulQuality", "Notifications", "1", "Displays the quality of captured soul");
+	RegisterSetting("ShowEscapedSoulQuality", "Notifications", "1", "Displays the quality of escaped soul");
 
 	if (CreateINI)
-		SaveSettingsToINI();
+		Save();
 	else
-		ReadSettingsFromINI();
+		Load();
 }
 
-_DefineHookHdlr(FindBestSoulGemVisitorVisitSizeCheck, 0x00473468);
-_DefineHookHdlr(SentientSoulCheck, 0x00473423);
-_DefineHookHdlr(DisplaySoulNameOnCapture, 0x006E236C);
-_DefineHookHdlr(DisplaySoulNameOnEscape, 0x006E23D9);
+_DefineHookHdlr(FindBestSoulGemVisitorVisitSizeCheck, 0x00472FF8);
+_DefineHookHdlr(SentientSoulCheck, 0x00472FB3);
+_DefineHookHdlr(DisplaySoulNameOnCapture, 0x006E41AC);
+_DefineHookHdlr(DisplaySoulNameOnEscape, 0x006E4219);
 
 void SmartenSkyrimSouls(void)
 {
@@ -44,16 +44,18 @@ void SmartenSkyrimSouls(void)
 	_MemHdlr(DisplaySoulNameOnEscape).WriteJump();
 }
 
+#pragma warning(disable : 4005)
+
 #define _hhName	FindBestSoulGemVisitorVisitSizeCheck
 _hhBegin()
 {
-	_hhSetVar(Retn, 0x0047346E);
-	_hhSetVar(Skip, 0x004734A4);
+	_hhSetVar(Retn, 0x00472FFE);
+	_hhSetVar(Skip, 0x00473034);
 	__asm
 	{
 		mov		eax, [esp + 0x10]
 		mov     eax, [eax + 0xC]
-		cmp		eax, 0x00063B27				// check if soulgem's Azura's Star, in which case allow lesser soul storage
+		cmp		eax, 0x00063B27				// perform formID check for Azura's Star, in which case allow lesser soul storage
 		jz		AZURASSTAR
 
 		cmp		esi, [esp + 0x14]			// check soulgem capacity
@@ -71,9 +73,9 @@ _hhBegin()
 #define _hhName	SentientSoulCheck
 _hhBegin()
 {
-	_hhSetVar(Retn, 0x00473437);
-	_hhSetVar(Skip, 0x004734A4);
-	_hhSetVar(Sentient, 0x0047342A);
+	_hhSetVar(Retn, 0x00472FC7);
+	_hhSetVar(Skip, 0x00473034);
+	_hhSetVar(Sentient, 0x00472FBA);
 	__asm
 	{
 		cmp     byte ptr [esp + 0x1C], 0
@@ -98,10 +100,10 @@ _hhBegin()
 
 UInt32 GetActorSoulType(Actor* Actor)
 {
-	bool IsSentient = thisCall<bool>(0x006A17D0, Actor);
-	int Level = thisCall<UInt16>(0x0069E970, Actor);
+	bool IsSentient = thisCall<bool>(0x006A2A90, Actor);
+	int Level = thisCall<UInt16>(0x0069FC40, Actor);
 
-	return cdeclCall<int>(0x00595D30, Level, IsSentient);
+	return cdeclCall<int>(0x00595BE0, Level, IsSentient);
 }
 
 const char* __stdcall ModifySoulTrapNotification(UInt8 NotificationType, const char* NotificationMessage, Actor* TrappedActor)
@@ -109,7 +111,7 @@ const char* __stdcall ModifySoulTrapNotification(UInt8 NotificationType, const c
 	static char s_NotificationMessageBuffer[0x200] = {0};
 
 	UInt32 SoulType = GetActorSoulType(TrappedActor);
-	const char* SoulName = cdeclCall<const char*>(0x004A7580, SoulType);
+	const char* SoulName = cdeclCall<const char*>(0x004A6F80, SoulType);
 
 	if ((g_INIManager->GetINIInt("ShowCapturedSoulQuality", "Notifications") == 0 && NotificationType == 1) ||
 		(g_INIManager->GetINIInt("ShowEscapedSoulQuality", "Notifications") == 0 && NotificationType == 0))
@@ -128,8 +130,8 @@ const char* __stdcall ModifySoulTrapNotification(UInt8 NotificationType, const c
 #define _hhName	DisplaySoulNameOnCapture
 _hhBegin()
 {
-	_hhSetVar(Retn, 0x006E2371);
-	_hhSetVar(Call, 0x00883190);
+	_hhSetVar(Retn, 0x006E41B1);
+	_hhSetVar(Call, 0x00885EB0);
 	__asm
 	{
 		pop		edx
@@ -146,8 +148,8 @@ _hhBegin()
 #define _hhName	DisplaySoulNameOnEscape
 _hhBegin()
 {
-	_hhSetVar(Retn, 0x006E23DE);
-	_hhSetVar(Call, 0x00883190);
+	_hhSetVar(Retn, 0x006E421E);
+	_hhSetVar(Call, 0x00885EB0);
 	__asm
 	{
 		pop		ecx

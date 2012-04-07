@@ -9,7 +9,7 @@ extern "C"
 		// populate info structure
 		info->infoVersion =	PluginInfo::kInfoVersion;
 		info->name =		"Smart Souls";
-		info->version =		4;
+		info->version =		5;
 
 		// store plugin handle so we can identify ourselves later
 		g_pluginHandle = skse->GetPluginHandle();
@@ -17,7 +17,7 @@ extern "C"
 
 		if(skse->isEditor)
 			return false;
-		else if(skse->runtimeVersion != RUNTIME_VERSION_1_4_21_0)
+		else if(skse->runtimeVersion != RUNTIME_VERSION_1_5_26_0)
 		{
 			_MESSAGE("Unsupported runtime version %08X", skse->runtimeVersion);
 			return false;

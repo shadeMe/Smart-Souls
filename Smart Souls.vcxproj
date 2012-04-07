@@ -139,8 +139,8 @@
     <ClCompile Include="..\SKSE\skse\GameSettings.cpp" />
     <ClCompile Include="..\SKSE\skse\GameTypes.cpp" />
     <ClCompile Include="..\SKSE\skse\Utilities.cpp" />
-    <ClCompile Include="..\[Libraries]\INI Manager\INIManager.cpp" />
-    <ClCompile Include="..\[Libraries]\MemoryHandler\MemoryHandler.cpp" />
+    <ClCompile Include="..\[Libraries]\SME Sundries\INIManager.cpp" />
+    <ClCompile Include="..\[Libraries]\SME Sundries\MemoryHandler.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="SmartSoulsInternals.cpp" />
   </ItemGroup>
@@ -156,9 +156,9 @@
     <ClInclude Include="..\SKSE\skse\GameTypes.h" />
     <ClInclude Include="..\SKSE\skse\PluginAPI.h" />
     <ClInclude Include="..\SKSE\skse\Utilities.h" />
-    <ClInclude Include="..\[Libraries]\INI Manager\INIManager.h" />
-    <ClInclude Include="..\[Libraries]\MemoryHandler\MemoryHandler.h" />
-    <ClInclude Include="..\[Libraries]\SME_Prefix.h" />
+    <ClInclude Include="..\[Libraries]\SME Sundries\INIManager.h" />
+    <ClInclude Include="..\[Libraries]\SME Sundries\MemoryHandler.h" />
+    <ClInclude Include="..\[Libraries]\SME Sundries\SME_Prefix.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SmartSoulsInternals.h" />
   </ItemGroup>

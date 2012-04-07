@@ -3,8 +3,9 @@
 #include "skse/PluginAPI.h"
 #include "skse/skse_version.h"
 
-#include "[Libraries]\MemoryHandler\MemoryHandler.h"
-#include "[Libraries]\INI Manager\INIManager.h"
+#include "[Libraries]\SME Sundries\SME_Prefix.h"
+#include "[Libraries]\SME Sundries\MemoryHandler.h"
+#include "[Libraries]\SME Sundries\INIManager.h"
 
 using namespace SME;
 using namespace SME::MemoryHandler;
