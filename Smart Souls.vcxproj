@@ -87,6 +87,12 @@
     <PostBuildEvent>
       <Message>Installing DLL...</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>cscript.exe "$(SolutionDir)\BuildIncrement.jse"</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Setting build number...</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -119,6 +125,12 @@
     <PostBuildEvent>
       <Message>Installing DLL...</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>cscript.exe "$(SolutionDir)\BuildIncrement.jse"</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Setting build number...</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\common.vcxproj">
@@ -126,7 +138,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="exports.def" />
+    <None Include="Exports.def" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\SKSE\skse\GameAPI.cpp" />
@@ -159,11 +171,11 @@
     <ClInclude Include="..\[Libraries]\SME Sundries\INIManager.h" />
     <ClInclude Include="..\[Libraries]\SME Sundries\MemoryHandler.h" />
     <ClInclude Include="..\[Libraries]\SME Sundries\SME_Prefix.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="SmartSoulsInternals.h" />
+    <ClInclude Include="VersionInfo.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Smart Souls.rc" />
+    <ResourceCompile Include="VersionInfo.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

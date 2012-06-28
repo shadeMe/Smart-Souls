@@ -20,12 +20,11 @@ class TESSoulGem;
 class Actor;
 
 extern SME::INI::INIManager*						g_INIManager;
-extern std::string									g_INIPath;
 
 class SmartSoulsINIManager : public INI::INIManager
 {
 public:
-	void							Initialize(const char* INIPath, void* Paramenter);
+	void								Initialize(const char* INIPath, void* Paramenter);
 };
 
 // 00
