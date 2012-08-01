@@ -1,3 +1,4 @@
+#pragma warning(disable : 4005)
 #include "SmartSoulsInternals.h"
 
 IDebugLog					gLog("Smart Souls.log");
@@ -30,10 +31,10 @@ void SmartSoulsINIManager::Initialize(const char* INIPath, void* Paramenter)
 		Load();
 }
 
-_DefineHookHdlr(FindBestSoulGemVisitorVisitSizeCheck, 0x00474A28);
-_DefineHookHdlr(SentientSoulCheck, 0x004749E3);
-_DefineHookHdlr(DisplaySoulNameOnCapture, 0x006EA55C);
-_DefineHookHdlr(DisplaySoulNameOnEscape, 0x006EA5C9);
+_DefineHookHdlr(FindBestSoulGemVisitorVisitSizeCheck, 0x00474BA8);
+_DefineHookHdlr(SentientSoulCheck, 0x00474B63);
+_DefineHookHdlr(DisplaySoulNameOnCapture, 0x006E8C4C);
+_DefineHookHdlr(DisplaySoulNameOnEscape, 0x006E8CB9);
 
 void SmartenSkyrimSouls(void)
 {
@@ -43,13 +44,11 @@ void SmartenSkyrimSouls(void)
 	_MemHdlr(DisplaySoulNameOnEscape).WriteJump();
 }
 
-#pragma warning(disable : 4005)
-
 #define _hhName	FindBestSoulGemVisitorVisitSizeCheck
 _hhBegin()
 {
-	_hhSetVar(Retn, 0x00474A2E);
-	_hhSetVar(Skip, 0x00474A64);
+	_hhSetVar(Retn, 0x00474BAE);
+	_hhSetVar(Skip, 0x00474BE4);
 	__asm
 	{
 		mov		eax, [esp + 0x10]
@@ -72,9 +71,9 @@ _hhBegin()
 #define _hhName	SentientSoulCheck
 _hhBegin()
 {
-	_hhSetVar(Retn, 0x004749F7);
-	_hhSetVar(Skip, 0x00474A64);
-	_hhSetVar(Sentient, 0x004749EA);
+	_hhSetVar(Retn, 0x00474B77);
+	_hhSetVar(Skip, 0x00474BE4);
+	_hhSetVar(Sentient, 0x00474B6A);
 	__asm
 	{
 		cmp     byte ptr [esp + 0x1C], 0
@@ -99,10 +98,10 @@ _hhBegin()
 
 UInt32 GetActorSoulType(Actor* Actor)
 {
-	bool IsSentient = thisCall<bool>(0x006A86F0, Actor);
-	int Level = thisCall<UInt16>(0x006A58B0, Actor);
+	bool IsSentient = thisCall<bool>(0x006A6B60, Actor);
+	int Level = thisCall<UInt16>(0x006A3CE0, Actor);
 
-	return cdeclCall<int>(0x005992D0, Level, IsSentient);
+	return cdeclCall<int>(0x00599880, Level, IsSentient);
 }
 
 const char* __stdcall ModifySoulTrapNotification(UInt8 NotificationType, const char* NotificationMessage, Actor* TrappedActor)
@@ -110,7 +109,7 @@ const char* __stdcall ModifySoulTrapNotification(UInt8 NotificationType, const c
 	static char s_NotificationMessageBuffer[0x200] = {0};
 
 	UInt32 SoulType = GetActorSoulType(TrappedActor);
-	const char* SoulName = cdeclCall<const char*>(0x004A9190, SoulType);
+	const char* SoulName = cdeclCall<const char*>(0x004A9380, SoulType);
 
 	if ((g_INIManager->GetINIInt("ShowCapturedSoulQuality", "Notifications") == 0 && NotificationType == 1) ||
 		(g_INIManager->GetINIInt("ShowEscapedSoulQuality", "Notifications") == 0 && NotificationType == 0))
@@ -129,8 +128,8 @@ const char* __stdcall ModifySoulTrapNotification(UInt8 NotificationType, const c
 #define _hhName	DisplaySoulNameOnCapture
 _hhBegin()
 {
-	_hhSetVar(Retn, 0x006EA561);
-	_hhSetVar(Call, 0x00892C10);
+	_hhSetVar(Retn, 0x006E8C51);
+	_hhSetVar(Call, 0x00890C80);
 	__asm
 	{
 		pop		edx
@@ -147,8 +146,8 @@ _hhBegin()
 #define _hhName	DisplaySoulNameOnEscape
 _hhBegin()
 {
-	_hhSetVar(Retn, 0x006EA5CE);
-	_hhSetVar(Call, 0x00892C10);
+	_hhSetVar(Retn, 0x006E8CBE);
+	_hhSetVar(Call, 0x00890C80);
 	__asm
 	{
 		pop		ecx
