@@ -1,6 +1,7 @@
 #pragma once
 
 #include "skse/PluginAPI.h"
+#include "skse/GameObjects.h"
 #include "skse/skse_version.h"
 
 #include "[Libraries]\SME Sundries\SME_Prefix.h"
@@ -25,6 +26,8 @@ class SmartSoulsINIManager : public INI::INIManager
 {
 public:
 	void								Initialize(const char* INIPath, void* Paramenter);
+
+	static const char*					AzuraImposterSectionName;
 };
 
 // 00
