@@ -25,6 +25,9 @@ void SmartSoulsINIManager::Initialize(const char* INIPath, void* Paramenter)
 	INIStream.close();
 	INIStream.clear();
 
+	RegisterSetting("ForceSoulSoulGemSizeMatch", "General", "1", "Soul and soul gem sizes should match for a successful capture");
+	RegisterSetting("LimitBlackGemsToBlackSouls", "General", "1", "Prevents non-NPC souls from being held in black soulgems");
+
 	RegisterSetting("ShowCapturedSoulQuality", "Notifications", "1", "Displays the quality of captured soul");
 	RegisterSetting("ShowEscapedSoulQuality", "Notifications", "1", "Displays the quality of escaped soul");
 
@@ -49,8 +52,10 @@ void SmartenSkyrimSouls(void)
 	_MemHdlr(DisplaySoulNameOnEscape).WriteJump();
 }
 
-bool __stdcall PerformSoulGemAzurasStarCheck(TESSoulGem* Soulgem)
+bool __stdcall PerformSoulGemSizeCheck(TESSoulGem* Soulgem)
 {
+	static const bool kForceSizeMatch = g_INIManager->GetINIInt("ForceSoulSoulGemSizeMatch", "General");
+
 	static UInt32 kAzurasStarFormID = 0x00063B27;
 	static std::list<UInt32> kImposters;
 	if (kImposters.size() == 0)
@@ -69,7 +74,8 @@ bool __stdcall PerformSoulGemAzurasStarCheck(TESSoulGem* Soulgem)
 
 	SME_ASSERT(Soulgem);
 
-	if (Soulgem->formID == kAzurasStarFormID ||
+	if (kForceSizeMatch == false ||
+		Soulgem->formID == kAzurasStarFormID ||
 		std::find(kImposters.begin(), kImposters.end(), Soulgem->formID & 0x00FFFFFF) != kImposters.end())
 	{
 		return true;
@@ -89,22 +95,34 @@ _hhBegin()
 		pushad
 
 		push	eax
-		call	PerformSoulGemAzurasStarCheck
+		call	PerformSoulGemSizeCheck
 		test	al, al
-		jnz		AZURASSTAR
+		jnz		SIZEOK
 
 		popad
-		cmp		esi, [esp + 0x14]			// check soulgem capacity
+		cmp		esi, [esp + 0x14]			// skip if soul != soul gem
 		jnz		SKIP
 		jmp		[_hhGetVar(Retn)]
 	SKIP:
 		jmp		[_hhGetVar(Skip)]
-	AZURASSTAR:
+	SIZEOK:
 		popad
-		cmp		esi, [esp + 0x14]
+		cmp		esi, [esp + 0x14]			// skip if soul > soul gem
 		jb		SKIP
 		jmp		[_hhGetVar(Retn)]
 	}
+}
+
+bool __stdcall PerformBlackSoulGemCheck(TESSoulGem* Soulgem)
+{
+	static const bool kLimitBlackGems = g_INIManager->GetINIInt("LimitBlackGemsToBlackSouls", "General");
+
+	SME_ASSERT(Soulgem);
+
+	if (kLimitBlackGems && (Soulgem->flags & 0x20000))
+		return true;
+	else
+		return false;
 }
 
 #define _hhName	SentientSoulCheck
@@ -118,10 +136,10 @@ _hhBegin()
 		cmp     byte ptr [esp + 0x1C], 0
 		jnz		SENTIENT
 
-		mov		ecx, [edi]					// if non-sentient, make sure we aren't using a black soul gem
-		mov     edx, [ecx + 0x8]
-		and		edx, 0x20000
-		setnz	al
+		mov		ecx, [edi]
+		pushad
+		push	ecx							// non-sentient, so check if black soul gem
+		call	PerformBlackSoulGemCheck
 		test    al, al
 		jz		NEXT
 
@@ -129,8 +147,10 @@ _hhBegin()
 	SENTIENT:
 		jmp		[_hhGetVar(Sentient)]
 	SKIP:
+		popad
 		jmp		[_hhGetVar(Skip)]
 	NEXT:
+		popad
 		jmp		[_hhGetVar(Retn)]
 	}
 }
