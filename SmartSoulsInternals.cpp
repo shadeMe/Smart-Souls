@@ -5,8 +5,28 @@
 IDebugLog					gLog("Smart Souls.log");
 PluginHandle				g_pluginHandle = kPluginHandle_Invalid;
 
-INI::INIManager*			g_INIManager = new SmartSoulsINIManager();
+SmartSoulsINIManager		SmartSoulsINIManager::Instance;
 const char*					SmartSoulsINIManager::AzuraImposterSectionName = "AzurasStarImposters";
+
+SME::INI::INISetting		kForceSoulSoulGemSizeMatch("ForceSoulSoulGemSizeMatch",
+												"General",
+												"Soul and soul gem sizes should match for a successful capture",
+												(SInt32)1);
+
+SME::INI::INISetting		kLimitBlackGemsToBlackSouls("LimitBlackGemsToBlackSouls",
+												   "General", 
+												   "Prevents non-NPC souls from being held in black soulgems",
+												   (SInt32)1);
+
+SME::INI::INISetting		kShowCapturedSoulQuality("ShowCapturedSoulQuality",
+												   "Notifications", 
+												   "Displays the quality of captured souls",
+												   (SInt32)1);
+
+SME::INI::INISetting		kShowEscapedSoulQuality("ShowEscapedSoulQuality",
+												   "Notifications", 
+												   "Displays the quality of escaped souls",
+												   (SInt32)1);
 
 void SmartSoulsINIManager::Initialize(const char* INIPath, void* Paramenter)
 {
@@ -25,24 +45,21 @@ void SmartSoulsINIManager::Initialize(const char* INIPath, void* Paramenter)
 	INIStream.close();
 	INIStream.clear();
 
-	RegisterSetting("ForceSoulSoulGemSizeMatch", "General", "1", "Soul and soul gem sizes should match for a successful capture");
-	RegisterSetting("LimitBlackGemsToBlackSouls", "General", "1", "Prevents non-NPC souls from being held in black soulgems");
-
-	RegisterSetting("ShowCapturedSoulQuality", "Notifications", "1", "Displays the quality of captured soul");
-	RegisterSetting("ShowEscapedSoulQuality", "Notifications", "1", "Displays the quality of escaped soul");
+	RegisterSetting(&kForceSoulSoulGemSizeMatch);
+	RegisterSetting(&kLimitBlackGemsToBlackSouls);
+	RegisterSetting(&kShowCapturedSoulQuality);
+	RegisterSetting(&kShowEscapedSoulQuality);
 
 	if (CreateINI)
 		Save();
-	else
-		Load();
 
 	PopulateFromSection(AzuraImposterSectionName);
 }
 
-_DefineHookHdlr(FindBestSoulGemVisitorVisitSizeCheck, 0x004765A8);
-_DefineHookHdlr(SentientSoulCheck, 0x00476563);
-_DefineHookHdlr(DisplaySoulNameOnCapture, 0x006EC58C);
-_DefineHookHdlr(DisplaySoulNameOnEscape, 0x006EC5F9);
+_DefineHookHdlr(FindBestSoulGemVisitorVisitSizeCheck, 0x004767A8);
+_DefineHookHdlr(SentientSoulCheck, 0x00476763);
+_DefineHookHdlr(DisplaySoulNameOnCapture, 0x006ECABC);
+_DefineHookHdlr(DisplaySoulNameOnEscape, 0x006ECB29);
 
 void SmartenSkyrimSouls(void)
 {
@@ -54,15 +71,22 @@ void SmartenSkyrimSouls(void)
 
 bool __stdcall PerformSoulGemSizeCheck(TESSoulGem* Soulgem)
 {
-	static const bool kForceSizeMatch = g_INIManager->GetINIInt("ForceSoulSoulGemSizeMatch", "General");
-
 	static UInt32 kAzurasStarFormID = 0x00063B27;
 	static std::list<UInt32> kImposters;
+
 	if (kImposters.size() == 0)
 	{
-		for (SME::INI::INIManagerIterator Itr(g_INIManager, SmartSoulsINIManager::AzuraImposterSectionName); Itr.GetDone() == false; Itr.GetNextSetting())
+		for (SME::INI::INIManagerIterator Itr(&SmartSoulsINIManager::Instance, SmartSoulsINIManager::AzuraImposterSectionName);
+										Itr.GetDone() == false;
+										Itr.GetNextSetting())
 		{
-			UInt32 FormID = Itr()->GetValueAsUnsignedInteger(true);
+			UInt32 FormID = 0;
+			SME_ASSERT(Itr()->GetType() == SME::INI::INISetting::kType_String);
+
+			sscanf_s(Itr()->GetData().s, "%08X", &FormID);
+#ifndef NDEBUG
+			_MESSAGE("Imposter = %s", Itr()->GetData().s);
+#endif
 
 			if (FormID)
 			{
@@ -74,7 +98,7 @@ bool __stdcall PerformSoulGemSizeCheck(TESSoulGem* Soulgem)
 
 	SME_ASSERT(Soulgem);
 
-	if (kForceSizeMatch == false ||
+	if (kForceSoulSoulGemSizeMatch.GetData().i == 0 ||
 		Soulgem->formID == kAzurasStarFormID ||
 		std::find(kImposters.begin(), kImposters.end(), Soulgem->formID & 0x00FFFFFF) != kImposters.end())
 	{
@@ -87,8 +111,8 @@ bool __stdcall PerformSoulGemSizeCheck(TESSoulGem* Soulgem)
 #define _hhName	FindBestSoulGemVisitorVisitSizeCheck
 _hhBegin()
 {
-	_hhSetVar(Retn, 0x004765AE);
-	_hhSetVar(Skip, 0x004765E4);
+	_hhSetVar(Retn, 0x004767AE);
+	_hhSetVar(Skip, 0x004767E4);
 	__asm
 	{
 		mov		eax, [esp + 0x10]
@@ -115,11 +139,9 @@ _hhBegin()
 
 bool __stdcall PerformBlackSoulGemCheck(TESSoulGem* Soulgem)
 {
-	static const bool kLimitBlackGems = g_INIManager->GetINIInt("LimitBlackGemsToBlackSouls", "General");
-
 	SME_ASSERT(Soulgem);
 
-	if (kLimitBlackGems && (Soulgem->flags & 0x20000))
+	if (kLimitBlackGemsToBlackSouls.GetData().i && (Soulgem->flags & 0x20000))
 		return true;
 	else
 		return false;
@@ -128,9 +150,9 @@ bool __stdcall PerformBlackSoulGemCheck(TESSoulGem* Soulgem)
 #define _hhName	SentientSoulCheck
 _hhBegin()
 {
-	_hhSetVar(Retn, 0x00476577);
-	_hhSetVar(Skip, 0x004765E4);
-	_hhSetVar(Sentient, 0x0047656A);
+	_hhSetVar(Retn, 0x00476777);
+	_hhSetVar(Skip, 0x004767E4);
+	_hhSetVar(Sentient, 0x0047676A);
 	__asm
 	{
 		cmp     byte ptr [esp + 0x1C], 0
@@ -157,29 +179,26 @@ _hhBegin()
 
 UInt32 GetActorSoulType(Actor* Actor)
 {
-	bool IsSentient = thisCall<bool>(0x006A9D30, Actor);
-	int Level = thisCall<UInt16>(0x006A6EC0, Actor);
+	bool IsSentient = thisCall<bool>(0x006AA140, Actor);
+	int Level = thisCall<UInt16>(0x006A7320, Actor);
 
-	return cdeclCall<int>(0x0059B900, Level, IsSentient);
+	return cdeclCall<int>(0x0059C090, Level, IsSentient);
 }
 
 const char* GetSoulName(UInt32 SoulType)
 {
-	return cdeclCall<const char*>(0x004AAF10, SoulType);
+	return cdeclCall<const char*>(0x004AB8D0, SoulType);
 }
 
 const char* __stdcall ModifySoulTrapNotification(UInt8 NotificationType, const char* NotificationMessage, Actor* TrappedActor)
 {
 	static char s_NotificationMessageBuffer[0x200] = {0};
 
-	static const bool kShowCapturedSoulQuality = g_INIManager->GetINIInt("ShowCapturedSoulQuality", "Notifications");
-	static const bool kShowEscapedSoulQuality = g_INIManager->GetINIInt("ShowEscapedSoulQuality", "Notifications");
-
 	UInt32 SoulType = GetActorSoulType(TrappedActor);
 	const char* SoulName = GetSoulName(SoulType);
 
-	if ((kShowCapturedSoulQuality == false && NotificationType == 1) ||
-		(kShowEscapedSoulQuality == false && NotificationType == 0))
+	if ((kShowCapturedSoulQuality.GetData().i == 0 && NotificationType == 1) ||
+		(kShowEscapedSoulQuality.GetData().i == 0 && NotificationType == 0))
 	{
 		return NotificationMessage;
 	}
@@ -195,8 +214,8 @@ const char* __stdcall ModifySoulTrapNotification(UInt8 NotificationType, const c
 #define _hhName	DisplaySoulNameOnCapture
 _hhBegin()
 {
-	_hhSetVar(Retn, 0x006EC591);
-	_hhSetVar(Call, 0x00898E60);
+	_hhSetVar(Retn, 0x006ECAC1);
+	_hhSetVar(Call, 0x008997A0);
 	__asm
 	{
 		pop		edx
@@ -213,8 +232,8 @@ _hhBegin()
 #define _hhName	DisplaySoulNameOnEscape
 _hhBegin()
 {
-	_hhSetVar(Retn, 0x006EC5FE);
-	_hhSetVar(Call, 0x00898E60);
+	_hhSetVar(Retn, 0x006ECB2E);
+	_hhSetVar(Call, 0x008997A0);
 	__asm
 	{
 		pop		ecx

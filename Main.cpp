@@ -15,7 +15,7 @@ extern "C"
 
 		if(skse->isEditor)
 			return false;
-		else if(skse->runtimeVersion != RUNTIME_VERSION_1_8_151_0)
+		else if(skse->runtimeVersion != RUNTIME_VERSION_1_9_32_0)
 		{
 			_MESSAGE("Unsupported runtime version %08X", skse->runtimeVersion);
 			return false;
@@ -27,7 +27,7 @@ extern "C"
 	bool SKSEPlugin_Load(const SKSEInterface * skse)
 	{
 		_MESSAGE("Initializing INI Manager");
-		g_INIManager->Initialize("Data\\SKSE\\Plugins\\Smart Souls.ini", NULL);
+		SmartSoulsINIManager::Instance.Initialize("Data\\SKSE\\Plugins\\Smart Souls.ini", NULL);
 
 		SmartenSkyrimSouls();
 

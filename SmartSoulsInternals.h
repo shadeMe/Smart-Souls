@@ -20,14 +20,14 @@ class TESContainer;
 class TESSoulGem;
 class Actor;
 
-extern SME::INI::INIManager*						g_INIManager;
-
 class SmartSoulsINIManager : public INI::INIManager
 {
 public:
 	void								Initialize(const char* INIPath, void* Paramenter);
 
 	static const char*					AzuraImposterSectionName;
+
+	static SmartSoulsINIManager			Instance;
 };
 
 // 00

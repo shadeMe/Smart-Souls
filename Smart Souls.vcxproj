@@ -142,14 +142,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\SKSE\skse\GameAPI.cpp" />
+    <ClCompile Include="..\SKSE\skse\GameData.cpp" />
     <ClCompile Include="..\SKSE\skse\GameFormComponents.cpp" />
     <ClCompile Include="..\SKSE\skse\GameForms.cpp" />
     <ClCompile Include="..\SKSE\skse\GameObjects.cpp" />
     <ClCompile Include="..\SKSE\skse\GamePathing.cpp" />
-    <ClCompile Include="..\SKSE\skse\GameReferences.cpp" />
     <ClCompile Include="..\SKSE\skse\GameRTTI.cpp" />
     <ClCompile Include="..\SKSE\skse\GameSettings.cpp" />
     <ClCompile Include="..\SKSE\skse\GameTypes.cpp" />
+    <ClCompile Include="..\SKSE\skse\NiNodes.cpp" />
     <ClCompile Include="..\SKSE\skse\Utilities.cpp" />
     <ClCompile Include="..\[Libraries]\SME Sundries\INIManager.cpp" />
     <ClCompile Include="..\[Libraries]\SME Sundries\MemoryHandler.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="..\SKSE\skse\GameRTTI.h" />
     <ClInclude Include="..\SKSE\skse\GameSettings.h" />
     <ClInclude Include="..\SKSE\skse\GameTypes.h" />
+    <ClInclude Include="..\SKSE\skse\NiNodes.h" />
     <ClInclude Include="..\SKSE\skse\PluginAPI.h" />
     <ClInclude Include="..\SKSE\skse\Utilities.h" />
     <ClInclude Include="..\[Libraries]\SME Sundries\INIManager.h" />

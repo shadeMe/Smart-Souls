@@ -17,9 +17,6 @@
     <ClCompile Include="..\SKSE\skse\GamePathing.cpp">
       <Filter>SKSE</Filter>
     </ClCompile>
-    <ClCompile Include="..\SKSE\skse\GameReferences.cpp">
-      <Filter>SKSE</Filter>
-    </ClCompile>
     <ClCompile Include="..\SKSE\skse\GameRTTI.cpp">
       <Filter>SKSE</Filter>
     </ClCompile>
@@ -38,6 +35,12 @@
     </ClCompile>
     <ClCompile Include="..\[Libraries]\SME Sundries\MemoryHandler.cpp">
       <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SKSE\skse\GameData.cpp">
+      <Filter>SKSE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SKSE\skse\NiNodes.cpp">
+      <Filter>SKSE</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +100,9 @@
     </ClInclude>
     <ClInclude Include="VersionInfo.h">
       <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SKSE\skse\NiNodes.h">
+      <Filter>SKSE</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
